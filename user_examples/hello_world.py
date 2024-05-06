@@ -11,7 +11,9 @@ from omni.isaac.examples.base_sample import BaseSample
 import numpy as np
 # Can be used to create a new cube or to point to an already existing cube in stage.
 from omni.isaac.core.objects import DynamicCuboid
-
+from omni.isaac.dynamic_control import _dynamic_control
+from pxr import UsdLux, Gf
+from omni.usd import get_context
 # Note: checkout the required tutorials at https://docs.omniverse.nvidia.com/app_isaacsim/app_isaacsim/overview.html
 
 
@@ -32,6 +34,14 @@ class HelloWorld(BaseSample):
                 scale=np.array([0.5015, 0.5015, 0.5015]), # most arguments accept mainly numpy arrays.
                 color=np.array([0, 0, 1.0]), # RGB channels, going from 0-1
             ))
+        
+         # Create a dome light
+        stage = get_context().get_stage()
+        light_path = "/World/fancy_dome_light"
+        light_prim = UsdLux.DomeLight.Define(stage, light_path)
+        light_prim.CreateIntensityAttr().Set(1.0)
+        light_prim.CreateColorAttr().Set(Gf.Vec3f(1.0, 1.0, 1.0))
+
         return
 
     async def setup_post_load(self):
